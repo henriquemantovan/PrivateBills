@@ -26,7 +26,7 @@ const LoginPage: React.FC = () => {
   };
 
   const goToTarefas = () => {
-    router.push('/tarefas');
+    router.push('/pages/tarefas');
   };
 
   return (
