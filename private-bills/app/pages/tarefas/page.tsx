@@ -7,11 +7,11 @@ const BillButtons: React.FC = () => {
   const router = useRouter();
 
   const goToPayMyBill = () => {
-    router.push('/PayMyBill');
+    router.push('/pages/PayMybill');
   };
 
   const goToPayABill = () => {
-    router.push('/PayABill');
+    router.push('/pages/PayABill');
   };
 
   return (
