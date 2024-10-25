@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import React, { useState } from 'react';
 import BillCard from '../components/BillCard';
 import Modal from '../components/BillModal';
