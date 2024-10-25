@@ -1,25 +1,28 @@
 "use client";
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation'; // Importar useRouter de next/navigation
 
 const BillCard = ({ billNumber, value, onSelect }: { billNumber: number; value: number; onSelect: () => void }) => {
-  return (
-    <div className="bg-yellow-200 border-2 border-black rounded-lg p-3 text-center shadow-md h-32 flex flex-col justify-between w-64">
-      <div>
-        <h2 className="text-md font-bold text-teal-900">Bill {billNumber}</h2>
-        <p className="text-teal-700 text-sm">value: {value} </p>
+    return (
+      <div className="bg-yellow-200 border-2 border-black rounded-lg p-6 text-center shadow-md h-48 flex flex-col justify-between w-80">
+        <div>
+            <h2 className="text-3xl font-bold text-teal-900">Bill {billNumber}</h2>
+            <p className="text-xl font-medium text-teal-800">value: {value}</p>
+            </div>
+        <button
+          className="bg-green-300 text-teal-900 font-bold border border-black rounded-lg px-4 py-3 mt-4 hover:bg-green-400"
+          onClick={onSelect}
+        >
+          Select
+        </button>
       </div>
-      <button
-        className="bg-green-200 text-teal-900 font-bold border border-black rounded-lg px-2 py-2 mt-2 hover:bg-green-300"
-        onClick={onSelect}
-      >
-        select
-      </button>
-    </div>
-  );
-};
+    );
+  };
+  
 
 // Componente principal
 const BillSelectionPage = () => {
+  const router = useRouter(); // Inicializar o useRouter
   const [bills] = useState([
     { id: 1, value: 1.23 },
     { id: 2, value: 4.56 },
@@ -46,6 +49,10 @@ const BillSelectionPage = () => {
     setMinValue(''); // Limpa o campo Min Value
     setMaxValue(''); // Limpa o campo Max Value
     setShowFilter(false); // Fecha o modal
+  };
+
+  const handleSelectBill = (billId: number) => {
+    router.push(`/account/${billId}`); // Redirecionar para a página da conta
   };
 
   return (
@@ -100,7 +107,9 @@ const BillSelectionPage = () => {
                 Cancel
               </button>
             </div>
-            <button onClick={removeFilters} className="bg-[#ADD8E6] text-teal-900 font-bold px-4 py-2 rounded-lg hover:bg-yellow-400 mt-4 w-full">
+            <button onClick={removeFilters}
+              className="bg-[#ADD8E6] text-teal-900 font-bold px-4 py-2 rounded-lg hover:bg-yellow-400 mt-4 w-full"
+            >
               Remove Filters
             </button>
           </div>
@@ -108,13 +117,13 @@ const BillSelectionPage = () => {
       )}
 
       <div className="flex justify-center items-center w-full px-6 mt-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6 w-full max-w-5xl mx-auto justify-items-center">
           {filteredBills.map((bill) => (
             <BillCard
               key={bill.id}
               billNumber={bill.id}
               value={bill.value}
-              onSelect={() => alert(`Bill ${bill.id} selected!`)}
+              onSelect={() => handleSelectBill(bill.id)} // Chamar a função para redirecionar
             />
           ))}
         </div>
