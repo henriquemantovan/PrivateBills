@@ -55,11 +55,11 @@ const BillSelectionPage = () => {
   };
 
   const closeModal = () => {
-    setSelectedBill(null); // Fecha o modal
+    setSelectedBill(null); 
   };
 
   const goBack = () => {
-    router.back(); // Retorna à página anterior
+    router.back(); 
   };
 
   return (
@@ -135,7 +135,7 @@ const BillSelectionPage = () => {
               key={bill.id}
               billNumber={bill.id}
               value={bill.value}
-              onSelect={() => handleSelectBill(bill)} // Chamar a função para mostrar o modal
+              onSelect={() => handleSelectBill(bill)} 
             />
           ))}
         </div>
