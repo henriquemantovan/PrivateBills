@@ -23,6 +23,10 @@ const PayMyBill = () => {
     router.push('/pages/PayMybill/YourBills');
   };
 
+  const goBack = () => {
+    router.back(); // Retorna à página anterior
+  };
+
   return (
     <div className="flex justify-center items-center h-screen w-screen bg-teal-500">
       <div className="relative bg-[#FFFAA0] w-[40vw] p-6 rounded-lg border-2 border-black shadow-lg">
