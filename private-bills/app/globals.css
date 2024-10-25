@@ -78,3 +78,7 @@ button:hover {
   color: red;
   text-align: center;
 }
+
+.backdrop-blur-custom {
+  backdrop-filter: blur(3px); 
+}

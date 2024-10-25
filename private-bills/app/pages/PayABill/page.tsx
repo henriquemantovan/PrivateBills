@@ -1,66 +1,77 @@
 "use client";
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation'; // Importar useRouter de next/navigation
+import { useRouter } from 'next/navigation';
+
 
 const BillCard = ({ billNumber, value, onSelect }: { billNumber: number; value: number; onSelect: () => void }) => {
-    return (
-      <div className="bg-yellow-200 border-2 border-black rounded-lg p-6 text-center shadow-md h-48 flex flex-col justify-between w-80">
-        <div>
-            <h2 className="text-3xl font-bold text-teal-900">Bill {billNumber}</h2>
-            <p className="text-xl font-medium text-teal-800">value: {value}</p>
-            </div>
-        <button
-          className="bg-green-300 text-teal-900 font-bold border border-black rounded-lg px-4 py-3 mt-4 hover:bg-green-400"
-          onClick={onSelect}
-        >
-          Select
-        </button>
+  return (
+    <div className="bg-yellow-200 border-2 border-black rounded-lg p-6 text-center shadow-md h-48 flex flex-col justify-between w-80">
+      <div>
+        <h2 className="text-3xl font-bold text-teal-900">Bill {billNumber}</h2>
+        <p className="text-xl font-medium text-teal-800">value: {value}</p>
       </div>
-    );
-  };
-  
+      <button
+        className="bg-green-300 text-teal-900 font-bold border border-black rounded-lg px-4 py-3 mt-4 hover:bg-green-400"
+        onClick={onSelect}
+      >
+        Select
+      </button>
+    </div>
+  );
+};
 
-// Componente principal
 const BillSelectionPage = () => {
-  const router = useRouter(); // Inicializar o useRouter
   const [bills] = useState([
-    { id: 1, value: 1.23 },
-    { id: 2, value: 4.56 },
-    { id: 3, value: 7.89 },
-    { id: 4, value: 0.99 },
+    { id: 1, value: 1.23, address: '0x123...' },
+    { id: 2, value: 4.56, address: '0x456...' },
+    { id: 3, value: 7.89, address: '0x789...' },
+    { id: 4, value: 0.99, address: 'Bc1qxy2kgdtv8vg80v0c725p5d0c0xgjuy9p9q6hp6' },
   ]);
+  const router = useRouter();
 
   const [filteredBills, setFilteredBills] = useState(bills);
   const [minValue, setMinValue] = useState('');
   const [maxValue, setMaxValue] = useState('');
   const [showFilter, setShowFilter] = useState(false);
+  const [selectedBill, setSelectedBill] = useState<{ id: number; value: number; address: string } | null>(null);
 
   const applyFilter = () => {
     const min = parseFloat(minValue) || 0;
     const max = parseFloat(maxValue) || Number.MAX_VALUE;
-
     const filtered = bills.filter((bill) => bill.value >= min && bill.value <= max);
     setFilteredBills(filtered);
     setShowFilter(false);
   };
 
   const removeFilters = () => {
-    setFilteredBills(bills); // Redefine para todas as contas
-    setMinValue(''); // Limpa o campo Min Value
-    setMaxValue(''); // Limpa o campo Max Value
-    setShowFilter(false); // Fecha o modal
+    setFilteredBills(bills);
+    setMinValue('');
+    setMaxValue('');
+    setShowFilter(false);
   };
 
-  const handleSelectBill = (billId: number) => {
-    router.push(`/account/${billId}`); // Redirecionar para a página da conta
+  const handleSelectBill = (bill: { id: number; value: number; address: string }) => {
+    setSelectedBill(bill); // Mostra o modal com as informações da conta selecionada
+  };
+
+  const closeModal = () => {
+    setSelectedBill(null); // Fecha o modal
+  };
+
+  const goBack = () => {
+    router.back(); // Retorna à página anterior
   };
 
   return (
     <div className="flex flex-col items-center justify-center h-screen w-screen bg-teal-500">
+        <button className="absolute top-4 left-4 w-10 h-10 rounded-full bg-teal-700 text-white text-2xl flex items-center justify-center hover:bg-teal-600"
+            onClick={goBack}>
+            ←
+        </button>
       <h1 className="text-4xl font-serif font-bold text-white my-4 text-center">That's on me!</h1>
 
       <div className="flex justify-center items-center mb-4 px-6">
-        <button 
+        <button
           className="bg-[#ADD8E6] hover:bg-[#87CEEB] text-gray-700 font-mono font-bold py-2 px-4 rounded-lg border-2 border-black flex items-center justify-between"
           onClick={() => setShowFilter(!showFilter)}
         >
@@ -70,7 +81,7 @@ const BillSelectionPage = () => {
       </div>
 
       {showFilter && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-custom">
           <div className="bg-yellow-200 border border-black p-6 rounded-lg shadow-lg w-80">
             <h2 className="text-xl font-bold text-teal-900 mb-4">Filter Bills by Value</h2>
             <div className="mb-2">
@@ -107,7 +118,8 @@ const BillSelectionPage = () => {
                 Cancel
               </button>
             </div>
-            <button onClick={removeFilters}
+            <button
+              onClick={removeFilters}
               className="bg-[#ADD8E6] text-teal-900 font-bold px-4 py-2 rounded-lg hover:bg-yellow-400 mt-4 w-full"
             >
               Remove Filters
@@ -123,11 +135,35 @@ const BillSelectionPage = () => {
               key={bill.id}
               billNumber={bill.id}
               value={bill.value}
-              onSelect={() => handleSelectBill(bill.id)} // Chamar a função para redirecionar
+              onSelect={() => handleSelectBill(bill)} // Chamar a função para mostrar o modal
             />
           ))}
         </div>
       </div>
+
+      {selectedBill && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-custom">
+            <div className="bg-yellow-200 border border-black p-6 rounded-lg shadow-lg w-96">
+            <h2 className="text-2xl font-bold text-teal-900 mb-4">Bill Details</h2>
+            <p className="text-lg text-teal-800">Bill ID: {selectedBill.id}</p>
+            <p className="text-lg text-teal-800">Value: ${selectedBill.value.toFixed(2)}</p>
+            <p className="text-lg text-teal-800 whitespace-normal break-words">Address: {selectedBill.address}</p>
+
+            <button
+                className="bg-green-300 text-teal-900 font-bold px-4 py-2 rounded-lg hover:bg-green-400 mt-4 w-full"
+            >
+                Pay now
+            </button>
+
+            <button
+                onClick={closeModal}
+                className="bg-red-300 text-teal-900 font-bold px-4 py-2 rounded-lg hover:bg-red-400 mt-4 w-full"
+            >
+                Close
+            </button>
+            </div>
+        </div>
+        )}
     </div>
   );
 };
