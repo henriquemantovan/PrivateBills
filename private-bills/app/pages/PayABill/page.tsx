@@ -146,7 +146,7 @@ const BillSelectionPage = () => {
             <div className="bg-yellow-200 border border-black p-6 rounded-lg shadow-lg w-96">
             <h2 className="text-2xl font-bold text-teal-900 mb-4">Bill Details</h2>
             <p className="text-lg text-teal-800">Bill ID: {selectedBill.id}</p>
-            <p className="text-lg text-teal-800">Value: ${selectedBill.value.toFixed(2)}</p>
+            <p className="text-lg text-teal-800">Value: {selectedBill.value.toFixed(2)}</p>
             <p className="text-lg text-teal-800 whitespace-normal break-words">Address: {selectedBill.address}</p>
 
             <button
